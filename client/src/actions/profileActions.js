@@ -66,9 +66,45 @@ export const addEducation = (eduData, history) => dispatch => {
     );
 };
 
+// Delete Experience
+export const deleteExperience = id => dispatch => {
+  axios
+    .delete(`/api/profile/experience/${id}`)
+    .then(res =>
+      dispatch({
+        type: GET_PROFILE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Delete Education
+export const deleteEducation = id => dispatch => {
+  axios
+    .delete(`/api/profile/education/${id}`)
+    .then(res =>
+      dispatch({
+        type: GET_PROFILE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Delete account & profile
 export const deleteAccount = () => dispatch => {
-  if (window.confirm('Are you sure? This cannot be reversed!')) {
+  if (window.confirm('Are you sure? This can NOT be undone!')) {
     axios
       .delete('/api/profile')
       .then(res =>
@@ -80,7 +116,7 @@ export const deleteAccount = () => dispatch => {
       .catch(err =>
         dispatch({
           type: GET_ERRORS,
-          payload: err.payload.data
+          payload: err.response.data
         })
       );
   }
@@ -93,7 +129,7 @@ export const setProfileLoading = () => {
   };
 };
 
-// Clear loading
+// Clear profile
 export const clearCurrentProfile = () => {
   return {
     type: CLEAR_CURRENT_PROFILE
