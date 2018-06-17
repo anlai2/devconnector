@@ -12,22 +12,10 @@ class Login extends Component {
       password: '',
       errors: {}
     };
+
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
-
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-
-  onSubmit = e => {
-    e.preventDefault();
-
-    const userData = {
-      email: this.state.email,
-      password: this.state.password
-    };
-
-    this.props.loginUser(userData);
-  };
 
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
@@ -39,9 +27,25 @@ class Login extends Component {
     if (nextProps.auth.isAuthenticated) {
       this.props.history.push('/dashboard');
     }
+
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+
+    const userData = {
+      email: this.state.email,
+      password: this.state.password
+    };
+
+    this.props.loginUser(userData);
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   render() {
@@ -67,7 +71,7 @@ class Login extends Component {
                 />
 
                 <TextFieldGroup
-                  placeholder="password"
+                  placeholder="Password"
                   name="password"
                   type="password"
                   value={this.state.password}
@@ -95,7 +99,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(
-  mapStateToProps,
-  { loginUser }
-)(Login);
+export default connect(mapStateToProps, { loginUser })(Login);

@@ -17,14 +17,14 @@ class ProfileItem extends Component {
             <h3>{profile.user.name}</h3>
             <p>
               {profile.status}{' '}
-              {!isEmpty(profile.company) ? (
+              {isEmpty(profile.company) ? null : (
                 <span>at {profile.company}</span>
-              ) : null}
+              )}
             </p>
             <p>
-              {!isEmpty(profile.location) ? (
+              {isEmpty(profile.location) ? null : (
                 <span>{profile.location}</span>
-              ) : null}
+              )}
             </p>
             <Link to={`/profile/${profile.handle}`} className="btn btn-info">
               View Profile

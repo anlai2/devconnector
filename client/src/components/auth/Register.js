@@ -15,6 +15,9 @@ class Register extends Component {
       password2: '',
       errors: {}
     };
+
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -23,17 +26,17 @@ class Register extends Component {
     }
   }
 
-  componentWillReceiveProps = nextProps => {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
-  };
+  }
 
-  onChange = e => {
+  onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
-  };
+  }
 
-  onSubmit = e => {
+  onSubmit(e) {
     e.preventDefault();
 
     const newUser = {
@@ -44,7 +47,7 @@ class Register extends Component {
     };
 
     this.props.registerUser(newUser, this.props.history);
-  };
+  }
 
   render() {
     const { errors } = this.state;
@@ -67,13 +70,13 @@ class Register extends Component {
                   error={errors.name}
                 />
                 <TextFieldGroup
-                  placeholder="Email Address"
+                  placeholder="Email"
                   name="email"
                   type="email"
                   value={this.state.email}
                   onChange={this.onChange}
                   error={errors.email}
-                  info="This site uses Gravatar for profile images."
+                  info="This site uses Gravatar so if you want a profile image, use a Gravatar email"
                 />
                 <TextFieldGroup
                   placeholder="Password"
@@ -112,7 +115,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(
-  mapStateToProps,
-  { registerUser }
-)(withRouter(Register));
+export default connect(mapStateToProps, { registerUser })(withRouter(Register));

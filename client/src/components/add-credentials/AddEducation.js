@@ -12,7 +12,7 @@ class AddEducation extends Component {
     this.state = {
       school: '',
       degree: '',
-      fieldOfStudy: '',
+      fieldofstudy: '',
       from: '',
       to: '',
       current: false,
@@ -20,6 +20,10 @@ class AddEducation extends Component {
       errors: {},
       disabled: false
     };
+
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onCheck = this.onCheck.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -28,13 +32,13 @@ class AddEducation extends Component {
     }
   }
 
-  onSubmit = e => {
+  onSubmit(e) {
     e.preventDefault();
 
     const eduData = {
       school: this.state.school,
       degree: this.state.degree,
-      fieldOfStudy: this.state.fieldOfStudy,
+      fieldofstudy: this.state.fieldofstudy,
       from: this.state.from,
       to: this.state.to,
       current: this.state.current,
@@ -42,18 +46,18 @@ class AddEducation extends Component {
     };
 
     this.props.addEducation(eduData, this.props.history);
-  };
+  }
 
-  onChange = e => {
+  onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
-  };
+  }
 
-  onCheck = e => {
+  onCheck(e) {
     this.setState({
       disabled: !this.state.disabled,
       current: !this.state.current
     });
-  };
+  }
 
   render() {
     const { errors } = this.state;
@@ -62,7 +66,7 @@ class AddEducation extends Component {
       <div className="add-education">
         <div className="container">
           <div className="row">
-            <div className="col md-8 m-auto">
+            <div className="col-md-8 m-auto">
               <Link to="/dashboard" className="btn btn-light">
                 Go Back
               </Link>
@@ -70,7 +74,7 @@ class AddEducation extends Component {
               <p className="lead text-center">
                 Add any school, bootcamp, etc that you have attended
               </p>
-              <small className="d-block pb-3">* = Required Fields</small>
+              <small className="d-block pb-3">* = required fields</small>
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
                   placeholder="* School"
@@ -80,7 +84,7 @@ class AddEducation extends Component {
                   error={errors.school}
                 />
                 <TextFieldGroup
-                  placeholder="* Degree/Certification"
+                  placeholder="* Degree or Certification"
                   name="degree"
                   value={this.state.degree}
                   onChange={this.onChange}
@@ -88,10 +92,10 @@ class AddEducation extends Component {
                 />
                 <TextFieldGroup
                   placeholder="* Field of Study"
-                  name="fieldOfStudy"
-                  value={this.state.fieldOfStudy}
+                  name="fieldofstudy"
+                  value={this.state.fieldofstudy}
                   onChange={this.onChange}
-                  error={errors.fieldOfStudy}
+                  error={errors.fieldofstudy}
                 />
                 <h6>From Date</h6>
                 <TextFieldGroup
@@ -110,7 +114,7 @@ class AddEducation extends Component {
                   error={errors.to}
                   disabled={this.state.disabled ? 'disabled' : ''}
                 />
-                <div className="form-check mb-6">
+                <div className="form-check mb-4">
                   <input
                     type="checkbox"
                     className="form-check-input"
@@ -121,7 +125,7 @@ class AddEducation extends Component {
                     id="current"
                   />
                   <label htmlFor="current" className="form-check-label">
-                    Current School
+                    Current Job
                   </label>
                 </div>
                 <TextAreaFieldGroup
@@ -135,7 +139,7 @@ class AddEducation extends Component {
                 <input
                   type="submit"
                   value="Submit"
-                  className="btn btn-info btn-block"
+                  className="btn btn-info btn-block mt-4"
                 />
               </form>
             </div>
@@ -157,7 +161,6 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(
-  mapStateToProps,
-  { addEducation }
-)(withRouter(AddEducation));
+export default connect(mapStateToProps, { addEducation })(
+  withRouter(AddEducation)
+);

@@ -19,7 +19,7 @@ class CreateProfile extends Component {
       location: '',
       status: '',
       skills: '',
-      githubUsername: '',
+      githubusername: '',
       bio: '',
       twitter: '',
       facebook: '',
@@ -28,6 +28,9 @@ class CreateProfile extends Component {
       instagram: '',
       errors: {}
     };
+
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,47 +39,31 @@ class CreateProfile extends Component {
     }
   }
 
-  onSubmit = e => {
+  onSubmit(e) {
     e.preventDefault();
 
-    const {
-      handle,
-      company,
-      website,
-      location,
-      status,
-      skills,
-      githubUsername,
-      bio,
-      twitter,
-      facebook,
-      linkedin,
-      youtube,
-      instagram
-    } = this.state;
-
     const profileData = {
-      handle,
-      company,
-      website,
-      location,
-      status,
-      skills,
-      githubUsername,
-      bio,
-      twitter,
-      facebook,
-      linkedin,
-      youtube,
-      instagram
+      handle: this.state.handle,
+      company: this.state.company,
+      website: this.state.website,
+      location: this.state.location,
+      status: this.state.status,
+      skills: this.state.skills,
+      githubusername: this.state.githubusername,
+      bio: this.state.bio,
+      twitter: this.state.twitter,
+      facebook: this.state.facebook,
+      linkedin: this.state.linkedin,
+      youtube: this.state.youtube,
+      instagram: this.state.instagram
     };
 
     this.props.createProfile(profileData, this.props.history);
-  };
+  }
 
-  onChange = e => {
+  onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
-  };
+  }
 
   render() {
     const { errors, displaySocialInputs } = this.state;
@@ -94,6 +81,7 @@ class CreateProfile extends Component {
             onChange={this.onChange}
             error={errors.twitter}
           />
+
           <InputGroup
             placeholder="Facebook Page URL"
             name="facebook"
@@ -102,6 +90,7 @@ class CreateProfile extends Component {
             onChange={this.onChange}
             error={errors.facebook}
           />
+
           <InputGroup
             placeholder="Linkedin Profile URL"
             name="linkedin"
@@ -110,6 +99,7 @@ class CreateProfile extends Component {
             onChange={this.onChange}
             error={errors.linkedin}
           />
+
           <InputGroup
             placeholder="YouTube Channel URL"
             name="youtube"
@@ -118,6 +108,7 @@ class CreateProfile extends Component {
             onChange={this.onChange}
             error={errors.youtube}
           />
+
           <InputGroup
             placeholder="Instagram Page URL"
             name="instagram"
@@ -142,6 +133,7 @@ class CreateProfile extends Component {
       { label: 'Intern', value: 'Intern' },
       { label: 'Other', value: 'Other' }
     ];
+
     return (
       <div className="create-profile">
         <div className="container">
@@ -151,7 +143,7 @@ class CreateProfile extends Component {
               <p className="lead text-center">
                 Let's get some information to make your profile stand out
               </p>
-              <small className="d-block pb-3">* = Required Fields</small>
+              <small className="d-block pb-3">* = required fields</small>
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
                   placeholder="* Profile Handle"
@@ -159,14 +151,14 @@ class CreateProfile extends Component {
                   value={this.state.handle}
                   onChange={this.onChange}
                   error={errors.handle}
-                  info="A unique handle for your profile URL. Your full name, company name, and nickname"
+                  info="A unique handle for your profile URL. Your full name, company name, nickname"
                 />
                 <SelectListGroup
                   placeholder="Status"
                   name="status"
                   value={this.state.status}
-                  options={options}
                   onChange={this.onChange}
+                  options={options}
                   error={errors.status}
                   info="Give us an idea of where you are at in your career"
                 />
@@ -175,7 +167,7 @@ class CreateProfile extends Component {
                   name="company"
                   value={this.state.company}
                   onChange={this.onChange}
-                  error={errors.handle}
+                  error={errors.company}
                   info="Could be your own company or one you work for"
                 />
                 <TextFieldGroup
@@ -200,14 +192,15 @@ class CreateProfile extends Component {
                   value={this.state.skills}
                   onChange={this.onChange}
                   error={errors.skills}
-                  info="Please use comma seperated values (eg. HTML,CSS,Javascript,PHP)"
+                  info="Please use comma separated values (eg.
+                    HTML,CSS,JavaScript,PHP"
                 />
                 <TextFieldGroup
                   placeholder="Github Username"
-                  name="githubUsername"
-                  value={this.state.githubUsername}
+                  name="githubusername"
+                  value={this.state.githubusername}
                   onChange={this.onChange}
-                  error={errors.githubUsername}
+                  error={errors.githubusername}
                   info="If you want your latest repos and a Github link, include your username"
                 />
                 <TextAreaFieldGroup
@@ -222,11 +215,11 @@ class CreateProfile extends Component {
                 <div className="mb-3">
                   <button
                     type="button"
-                    onClick={prevState =>
-                      this.setState({
+                    onClick={() => {
+                      this.setState(prevState => ({
                         displaySocialInputs: !prevState.displaySocialInputs
-                      })
-                    }
+                      }));
+                    }}
                     className="btn btn-light"
                   >
                     Add Social Network Links
@@ -258,7 +251,6 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(
-  mapStateToProps,
-  { createProfile }
-)(withRouter(CreateProfile));
+export default connect(mapStateToProps, { createProfile })(
+  withRouter(CreateProfile)
+);
