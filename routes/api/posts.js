@@ -3,10 +3,9 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
 
-// Post Model
+// Post model
 const Post = require('../../models/Post');
-
-// Profile Model
+// Profile model
 const Profile = require('../../models/Profile');
 
 // Validation
@@ -24,17 +23,17 @@ router.get('/', (req, res) => {
   Post.find()
     .sort({ date: -1 })
     .then(posts => res.json(posts))
-    .catch(err => res.status(404).json({ noPostFound: 'No posts found' }));
+    .catch(err => res.status(404).json({ nopostsfound: 'No posts found' }));
 });
 
 // @route   GET api/posts/:id
-// @desc    Get posts by id
+// @desc    Get post by id
 // @access  Public
 router.get('/:id', (req, res) => {
   Post.findById(req.params.id)
     .then(post => res.json(post))
     .catch(err =>
-      res.status(404).json({ noPostFound: 'No post found with that ID' })
+      res.status(404).json({ nopostfound: 'No post found with that ID' })
     );
 });
 
@@ -50,7 +49,7 @@ router.post(
     // Check Validation
     if (!isValid) {
       // If any errors, send 400 with errors object
-      return releaseEvents.status(400).json(errors);
+      return res.status(400).json(errors);
     }
 
     const newPost = new Post({
@@ -76,13 +75,15 @@ router.delete(
         .then(post => {
           // Check for post owner
           if (post.user.toString() !== req.user.id) {
-            return res.status(401).json({ error: 'User not authorized' });
+            return res
+              .status(401)
+              .json({ notauthorized: 'User not authorized' });
           }
 
           // Delete
           post.remove().then(() => res.json({ success: true }));
         })
-        .catch(err => res.status(404).json({ error: 'Post not found' }));
+        .catch(err => res.status(404).json({ postnotfound: 'No post found' }));
     });
   }
 );
@@ -103,7 +104,7 @@ router.post(
           ) {
             return res
               .status(400)
-              .json({ error: 'User already liked this post' });
+              .json({ alreadyliked: 'User already liked this post' });
           }
 
           // Add user id to likes array
@@ -111,7 +112,7 @@ router.post(
 
           post.save().then(post => res.json(post));
         })
-        .catch(err => res.status(404).json({ error: 'Post not found' }));
+        .catch(err => res.status(404).json({ postnotfound: 'No post found' }));
     });
   }
 );
@@ -132,7 +133,7 @@ router.post(
           ) {
             return res
               .status(400)
-              .json({ error: 'You have not yet liked this post' });
+              .json({ notliked: 'You have not yet liked this post' });
           }
 
           // Get remove index
@@ -146,7 +147,7 @@ router.post(
           // Save
           post.save().then(post => res.json(post));
         })
-        .catch(err => res.status(404).json({ error: 'Post not found' }));
+        .catch(err => res.status(404).json({ postnotfound: 'No post found' }));
     });
   }
 );
@@ -181,7 +182,7 @@ router.post(
         // Save
         post.save().then(post => res.json(post));
       })
-      .catch(err => res.status(404).json({ postNotFound: 'No post found' }));
+      .catch(err => res.status(404).json({ postnotfound: 'No post found' }));
   }
 );
 
@@ -202,7 +203,7 @@ router.delete(
         ) {
           return res
             .status(404)
-            .json({ commentNotFound: 'Comment does not exist' });
+            .json({ commentnotexists: 'Comment does not exist' });
         }
 
         // Get remove index
@@ -210,12 +211,13 @@ router.delete(
           .map(item => item._id.toString())
           .indexOf(req.params.comment_id);
 
-        // Splice out of array
+        // Splice comment out of array
         post.comments.splice(removeIndex, 1);
 
         post.save().then(post => res.json(post));
       })
-      .catch(err => res.status(404).json({ postNotFound: 'No post found' }));
+      .catch(err => res.status(404).json({ postnotfound: 'No post found' }));
   }
 );
+
 module.exports = router;
